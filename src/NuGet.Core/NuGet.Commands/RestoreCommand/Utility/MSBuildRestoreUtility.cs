@@ -166,9 +166,14 @@ namespace NuGet.Commands
                 {
                     result = GetProjectJsonSpec(specItem);
                 }
+                else if(restoreType == ProjectStyle.PackageReference)
+                {
+                    // Read msbuild data for PR and related projects
+                    result = GetPackageReferenceBasedSpec(specItem, restoreType);
+                    result.TargetFrameworks.AddRange(GetTargetFrameworkInformation(result.FilePath, items));
+                }
                 else
                 {
-                    // Read msbuild data for both non-nuget and .NET Core
                     result = GetBaseSpec(specItem, restoreType);
                 }
 
@@ -227,9 +232,9 @@ namespace NuGet.Commands
                     AddFrameworkReferences(result, items);
 
                     // Store the original framework strings for msbuild conditionals
-                    foreach (var originalFramework in GetFrameworksStrings(specItem))
-                    {
-                        result.RestoreMetadata.OriginalTargetFrameworks.Add(originalFramework);
+                    foreach(var tfi in result.TargetFrameworks)
+                    { 
+                        result.RestoreMetadata.OriginalTargetFrameworks.Add(tfi.TargetAlias);
                     }
                 }
 
@@ -418,6 +423,52 @@ namespace NuGet.Commands
             message.FilePath = path;
 
             return message;
+        }
+
+        private static List<TargetFrameworkInformation> GetTargetFrameworkInformation(string filePath, IEnumerable<IMSBuildItem> items)
+        {
+            var frameworks = new List<TargetFrameworkInformation>();
+
+            foreach (var item in GetItemByType(items, "TargetFrameworkInformation"))
+            {
+                var frameworkString = item.GetProperty("TargetFramework");
+                var targetFrameworkIdentifier = item.GetProperty("TargetFrameworkIdentifier");
+                var targetFrameworkVersion = item.GetProperty("TargetFrameworkVersion");
+                var targetFrameworkMoniker = item.GetProperty("TargetFrameworkMoniker");
+                var targetPlatformIdentifier = item.GetProperty("TargetPlatformIdentifier");
+                var targetPlatformVersion = item.GetProperty("TargetPlatformVersion");
+                var targetPlatformMinVersion = item.GetProperty("TargetPlatformMinVersion");
+
+                var targetFramework = MSBuildProjectFrameworkUtility.GetProjectFrameworkStrings(
+                  projectFilePath: filePath,
+                  targetFrameworks: null,
+                  targetFramework: null,
+                  targetFrameworkMoniker: targetFrameworkMoniker,
+                  targetPlatformIdentifier: targetPlatformIdentifier,
+                  targetPlatformVersion: targetPlatformVersion,
+                  targetPlatformMinVersion: targetPlatformMinVersion);
+
+                var targetFrameworkInfo = new TargetFrameworkInformation()
+                {
+                    FrameworkName = NuGetFramework.Parse(targetFramework.Single()),
+                    TargetAlias = frameworkString,
+                };
+                var packageTargetFallback = MSBuildStringUtility.Split(item.GetProperty("PackageTargetFallback"))
+                    .Select(NuGetFramework.Parse)
+                    .ToList();
+
+                var assetTargetFallback = MSBuildStringUtility.Split(item.GetProperty(AssetTargetFallbackUtility.AssetTargetFallback))
+                    .Select(NuGetFramework.Parse)
+                    .ToList();
+
+                // Throw if an invalid combination was used.
+                AssetTargetFallbackUtility.EnsureValidFallback(packageTargetFallback, assetTargetFallback, filePath);
+
+                // Update the framework appropriately
+                AssetTargetFallbackUtility.ApplyFramework(targetFrameworkInfo, packageTargetFallback, assetTargetFallback);
+            }
+
+            return frameworks;
         }
 
         private static void AddPackageTargetFallbacks(PackageSpec spec, IEnumerable<IMSBuildItem> items)
@@ -773,6 +824,18 @@ namespace NuGet.Commands
                 .ToList();
 
             var spec = new PackageSpec(frameworkInfo);
+            spec.RestoreMetadata = projectStyle == ProjectStyle.PackagesConfig
+                ? new PackagesConfigProjectRestoreMetadata()
+                : new ProjectRestoreMetadata();
+            spec.FilePath = specItem.GetProperty("ProjectPath");
+            spec.RestoreMetadata.ProjectName = specItem.GetProperty("ProjectName");
+
+            return spec;
+        }
+
+        private static PackageSpec GetPackageReferenceBasedSpec(IMSBuildItem specItem, ProjectStyle projectStyle)
+        {
+            var spec = new PackageSpec();
             spec.RestoreMetadata = projectStyle == ProjectStyle.PackagesConfig
                 ? new PackagesConfigProjectRestoreMetadata()
                 : new ProjectRestoreMetadata();

@@ -14,6 +14,8 @@ namespace NuGet.ProjectModel
 {
     public class TargetFrameworkInformation : IEquatable<TargetFrameworkInformation>
     {
+        public string TargetAlias { get; set; }
+
         public NuGetFramework FrameworkName { get; set; }
 
         public IList<LibraryDependency> Dependencies { get; set; } = new List<LibraryDependency>();
