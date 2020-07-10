@@ -451,7 +451,7 @@ namespace NuGet.Commands
                 var targetFrameworkInfo = new TargetFrameworkInformation()
                 {
                     FrameworkName = NuGetFramework.Parse(targetFramework.Single()),
-                    TargetAlias = frameworkString,
+                    TargetAlias = string.IsNullOrEmpty(frameworkString) ? null : frameworkString,
                 };
                 var packageTargetFallback = MSBuildStringUtility.Split(item.GetProperty("PackageTargetFallback"))
                     .Select(NuGetFramework.Parse)
