@@ -848,10 +848,10 @@ namespace NuGet.Commands
         private static HashSet<NuGetFramework> GetFrameworks(IMSBuildItem item)
         {
             return new HashSet<NuGetFramework>(
-                GetFrameworksStrings(item).Select(NuGetFramework.Parse));
+                GetTargetFrameworkStrings(item).Select(NuGetFramework.Parse));
         }
 
-        private static HashSet<string> GetFrameworksStrings(IMSBuildItem item)
+        private static HashSet<string> GetTargetFrameworkStrings(IMSBuildItem item)
         {
             var frameworks = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
