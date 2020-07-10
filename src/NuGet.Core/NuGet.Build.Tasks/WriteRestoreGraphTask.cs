@@ -1,6 +1,8 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
@@ -31,6 +33,15 @@ namespace NuGet.Build.Tasks
 
         public override bool Execute()
         {
+
+#if DEBUG
+            var debugRestoreTask = Environment.GetEnvironmentVariable("DEBUG_WRITE_RESTORE_GRAPH");
+            if (!string.IsNullOrEmpty(debugRestoreTask) && debugRestoreTask.Equals(bool.TrueString, StringComparison.OrdinalIgnoreCase))
+            {
+                Debugger.Launch();
+            }
+#endif
+
             if (RestoreGraphItems.Length < 1)
             {
                 Log.LogWarning("Unable to find a project to restore!");
