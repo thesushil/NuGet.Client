@@ -425,10 +425,8 @@ namespace NuGet.Commands
             return message;
         }
 
-        private static List<TargetFrameworkInformation> GetTargetFrameworkInformation(string filePath, IEnumerable<IMSBuildItem> items)
+        private static IEnumerable<TargetFrameworkInformation> GetTargetFrameworkInformation(string filePath, IEnumerable<IMSBuildItem> items)
         {
-            var frameworks = new List<TargetFrameworkInformation>();
-
             foreach (var item in GetItemByType(items, "TargetFrameworkInformation"))
             {
                 var frameworkString = item.GetProperty("TargetFramework");
@@ -466,9 +464,8 @@ namespace NuGet.Commands
 
                 // Update the framework appropriately
                 AssetTargetFallbackUtility.ApplyFramework(targetFrameworkInfo, packageTargetFallback, assetTargetFallback);
+                yield return targetFrameworkInfo;
             }
-
-            return frameworks;
         }
 
         private static void AddPackageTargetFallbacks(PackageSpec spec, IEnumerable<IMSBuildItem> items)
