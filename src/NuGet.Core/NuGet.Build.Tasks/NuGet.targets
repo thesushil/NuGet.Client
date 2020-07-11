@@ -492,41 +492,6 @@ Copyright (c) .NET Foundation. All rights reserved.
 
   <!--
     ============================================================
-    _GetRestoreTargetFrameworksOutput
-    Read target frameworks from the project.
-    Non-NETCore project frameworks will be returned.
-    ============================================================
-  -->
-  <Target Name="_GetRestoreTargetFrameworksOutput"
-    DependsOnTargets="_GetRestoreProjectStyle"
-    Returns="@(_RestoreTargetFrameworksOutputFiltered)">
-
-    <PropertyGroup>
-      <_RestoreProjectFramework></_RestoreProjectFramework>
-    </PropertyGroup>
-
-    <!-- For project.json projects target frameworks will be read from project.json. -->
-    <GetProjectTargetFrameworksTask
-      Condition=" '$(RestoreProjectStyle)' != 'ProjectJson' "
-      ProjectPath="$(MSBuildProjectFullPath)"
-      TargetFrameworks="$(TargetFrameworks)"
-      TargetFramework="$(TargetFramework)"
-      TargetFrameworkMoniker="$(TargetFrameworkMoniker)"
-      TargetPlatformIdentifier="$(TargetPlatformIdentifier)"
-      TargetPlatformVersion="$(TargetPlatformVersion)"
-      TargetPlatformMinVersion="$(TargetPlatformMinVersion)">
-      <Output
-        TaskParameter="ProjectTargetFrameworks"
-        PropertyName="_RestoreProjectFramework" />
-    </GetProjectTargetFrameworksTask>
-
-    <ItemGroup Condition=" '$(_RestoreProjectFramework)' != '' ">
-      <_RestoreTargetFrameworksOutputFiltered Include="$(_RestoreProjectFramework.Split(';'))" />
-    </ItemGroup>
-  </Target>
-
-  <!--
-    ============================================================
     _GetRestoreTargetFrameworksAsItems
     Read $(TargetFrameworks) from the project as items.
     Projects that do not have $(TargetFrameworks) will noop.
@@ -650,7 +615,7 @@ Copyright (c) .NET Foundation. All rights reserved.
     ============================================================
   -->
   <Target Name="_GenerateRestoreProjectSpec"
-    DependsOnTargets="_GetRestoreProjectStyle;_GetRestoreTargetFrameworksOutput;_GetRestoreSettings"
+    DependsOnTargets="_GetRestoreProjectStyle;_GetRestoreSettings"
     Returns="@(_RestoreGraphEntry)">
 
     <!-- Determine the restore output path -->
@@ -711,7 +676,6 @@ Copyright (c) .NET Foundation. All rights reserved.
         <PackagesPath>$(_OutputPackagesPath)</PackagesPath>
         <ProjectStyle>$(RestoreProjectStyle)</ProjectStyle>
         <OutputPath>$(RestoreOutputAbsolutePath)</OutputPath>
-        <TargetFrameworks>@(_RestoreTargetFrameworksOutputFiltered)</TargetFrameworks>
         <RuntimeIdentifiers>$(RuntimeIdentifiers);$(RuntimeIdentifier)</RuntimeIdentifiers>
         <RuntimeSupports>$(RuntimeSupports)</RuntimeSupports>
         <CrossTargeting>$(_RestoreCrossTargeting)</CrossTargeting>
@@ -754,7 +718,6 @@ Copyright (c) .NET Foundation. All rights reserved.
         <ProjectPath>$(MSBuildProjectFullPath)</ProjectPath>
         <ProjectName>$(_RestoreProjectName)</ProjectName>
         <ProjectStyle>$(RestoreProjectStyle)</ProjectStyle>
-        <TargetFrameworks>@(_RestoreTargetFrameworksOutputFiltered)</TargetFrameworks>
         <PackagesConfigPath Condition="Exists('$(MSBuildProjectDirectory)\packages.$(MSBuildProjectName).config')">$(MSBuildProjectDirectory)\packages.$(MSBuildProjectName).config</PackagesConfigPath>
         <PackagesConfigPath Condition="Exists('$(MSBuildProjectDirectory)\packages.config')">$(MSBuildProjectDirectory)\packages.config</PackagesConfigPath>
         <RestorePackagesWithLockFile>$(RestorePackagesWithLockFile)</RestorePackagesWithLockFile>
@@ -776,7 +739,6 @@ Copyright (c) .NET Foundation. All rights reserved.
         <ProjectPath>$(MSBuildProjectFullPath)</ProjectPath>
         <ProjectName>$(_RestoreProjectName)</ProjectName>
         <ProjectStyle>$(RestoreProjectStyle)</ProjectStyle>
-        <TargetFrameworks>@(_RestoreTargetFrameworksOutputFiltered)</TargetFrameworks>
       </_RestoreGraphEntry>
     </ItemGroup>
   </Target>
@@ -790,7 +752,6 @@ Copyright (c) .NET Foundation. All rights reserved.
   <Target Name="_GenerateProjectRestoreGraph"
       DependsOnTargets="
       _GetRestoreProjectStyle;
-      _GetRestoreTargetFrameworksOutput;
       _GenerateRestoreProjectSpec;
       _GenerateRestoreDependencies"
       Returns="@(_RestoreGraphEntry)">
