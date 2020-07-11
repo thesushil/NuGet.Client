@@ -495,6 +495,7 @@ namespace NuGet.ProjectModel
             if (frameworks.Any())
             {
                 writer.WriteObjectStart("frameworks");
+                // The alias might need to be written here.
 
                 var frameworkSorter = new NuGetFrameworkSorter();
                 foreach (var framework in frameworks.OrderBy(c => c.FrameworkName, frameworkSorter))

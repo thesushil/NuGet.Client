@@ -2,9 +2,6 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using NuGet.Frameworks;
 using NuGet.LibraryModel;
 using NuGet.Shared;
 
@@ -12,6 +9,7 @@ namespace NuGet.ProjectModel
 {
     public class ProjectRestoreReference : IEquatable<ProjectRestoreReference>
     {
+        public string TargetAlias { get; set; }
         /// <summary>
         /// Project unique name.
         /// </summary>
