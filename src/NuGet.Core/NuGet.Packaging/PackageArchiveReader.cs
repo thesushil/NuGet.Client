@@ -192,7 +192,7 @@ namespace NuGet.Packaging
 
                 using (var stream = entry.Open())
                 {
-                    var copiedFile = extractFile(packageFileName, targetFilePath, stream);
+                    var copiedFile = extractFile(packageFileName, targetFilePath, stream, entry.Length);
                     if (copiedFile != null)
                     {
                         entry.UpdateFileTimeFromEntry(copiedFile, logger);

@@ -89,7 +89,7 @@ namespace NuGet.Packaging
             return null;
         }
 
-        public string ExtractPackageFile(string source, string target, Stream stream)
+        public string ExtractPackageFile(string source, string target, Stream stream, long? size)
         {
             if ((_xmlDocFileSaveMode == XmlDocFileSaveMode.Skip) && _intellisenseXmlFiles.Contains(source))
             {
@@ -125,7 +125,7 @@ namespace NuGet.Packaging
             }
             else
             {
-                stream.CopyToFile(target);
+                stream.CopyToFile(target, size);
             }
 
             return target;

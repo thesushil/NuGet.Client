@@ -1316,7 +1316,7 @@ namespace NuGet.Protocol.Plugins.Tests
             }
         }
 
-        private string ExtractPackageFile(string sourceFile, string targetPath, Stream fileStream)
+        private string ExtractPackageFile(string sourceFile, string targetPath, Stream fileStream, long? size)
         {
             throw new NotImplementedException();
         }

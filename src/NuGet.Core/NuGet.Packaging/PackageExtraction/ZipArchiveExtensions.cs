@@ -57,7 +57,7 @@ namespace NuGet.Packaging
         {
             using (var inputStream = entry.Open())
             {
-                inputStream.CopyToFile(fileFullPath);
+                inputStream.CopyToFile(fileFullPath, entry.Length);
             }
 
             entry.UpdateFileTimeFromEntry(fileFullPath, logger);

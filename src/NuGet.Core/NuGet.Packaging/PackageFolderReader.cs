@@ -212,7 +212,7 @@ namespace NuGet.Packaging
 
                 using (var fileStream = sourceFile.OpenRead())
                 {
-                    targetPath = extractFile(sourceFile.FullName, targetPath, fileStream);
+                    targetPath = extractFile(sourceFile.FullName, targetPath, fileStream, null);
                     if (targetPath != null)
                     {
                         File.SetLastWriteTimeUtc(targetPath, sourceFile.LastWriteTimeUtc);

@@ -1082,7 +1082,7 @@ namespace NuGet.Packaging.Test
             }
         }
 
-        private static string ExtractFile(string sourcePath, string targetPath, Stream sourceStream)
+        private static string ExtractFile(string sourcePath, string targetPath, Stream sourceStream, long? size)
         {
             using (var targetStream = File.OpenWrite(targetPath))
             {
