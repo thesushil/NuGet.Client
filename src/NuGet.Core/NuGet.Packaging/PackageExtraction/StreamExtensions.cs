@@ -40,11 +40,11 @@ namespace NuGet.Packaging
             if (size > 0 && size <= MAX_MMAP_SIZE)
             {
                 using (MemoryMappedFile mmf = MemoryMappedFile.CreateFromFile(fileFullPath, FileMode.Create, null, (long)size))
+                using (MemoryMappedViewStream mmstream = mmf.CreateViewStream())
                 {
-                    MemoryMappedViewStream mmstream = mmf.CreateViewStream();
                     inputStream.CopyTo(mmstream);
-                    return fileFullPath;
                 }
+                return fileFullPath;
             }
 
             using (var outputStream = NuGetExtractionFileIO.CreateFile(fileFullPath))
