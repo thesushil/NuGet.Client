@@ -28,8 +28,8 @@ namespace NuGet.Protocol.Core.Types
             private static readonly AsyncLazy<PackageDeprecationMetadata> LazyNullDeprecationMetadata =
                 AsyncLazy.New((PackageDeprecationMetadata)null);
 
-            private static readonly AsyncLazy<IEnumerable<PackageVulnerabilityMetadata>> LazyNullVulnerabilityMetadata =
-                AsyncLazy.New((IEnumerable<PackageVulnerabilityMetadata>)null);
+            private static readonly AsyncLazy<IEnumerable<IPackageVulnerabilityMetadata>> LazyNullVulnerabilityMetadata =
+                AsyncLazy.New((IEnumerable<IPackageVulnerabilityMetadata>)null);
 
             public string Authors { get; set; }
             public IEnumerable<PackageDependencyGroup> DependencySets { get; set; }
@@ -55,8 +55,8 @@ namespace NuGet.Protocol.Core.Types
 
             internal AsyncLazy<PackageDeprecationMetadata> LazyDeprecationFactory { get; set; }
             public async Task<PackageDeprecationMetadata> GetDeprecationMetadataAsync() => await (LazyDeprecationFactory ?? LazyNullDeprecationMetadata);
-            internal AsyncLazy<IEnumerable<PackageVulnerabilityMetadata>> LazyVulnerabilityFactory { get; set; }
-            public async Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => await (LazyVulnerabilityFactory ?? LazyNullVulnerabilityMetadata);
+            internal AsyncLazy<IEnumerable<IPackageVulnerabilityMetadata>> LazyVulnerabilityFactory { get; set; }
+            public async Task<IEnumerable<IPackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => await (LazyVulnerabilityFactory ?? LazyNullVulnerabilityMetadata);
             public bool IsListed { get; set; }
             public Func<PackageReaderBase> PackageReader { get; set; }
         }

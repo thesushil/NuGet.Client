@@ -588,7 +588,7 @@ namespace NuGet.PackageManagement.UI
 
         private async Task<IEnumerable<(VersionInfo versionInfo,
             PackageDeprecationMetadata deprecationMetadata,
-            IEnumerable<PackageVulnerabilityMetadata> vulnerabilityMetadata)>> GetVersionsWithExtendedMetadataAsync()
+            IEnumerable<IPackageVulnerabilityMetadata> vulnerabilityMetadata)>> GetVersionsWithExtendedMetadataAsync()
         {
             var versions = await _searchResultPackage.GetVersionsAsync();
             return await Task.WhenAll(

@@ -142,7 +142,7 @@ namespace NuGet.Protocol
 
         public Task<PackageDeprecationMetadata> GetDeprecationMetadataAsync() => Task.FromResult<PackageDeprecationMetadata>(null);
 
-        public Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => Task.FromResult<IEnumerable<PackageVulnerabilityMetadata>>(null);
+        public Task<IEnumerable<IPackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync() => Task.FromResult<IEnumerable<IPackageVulnerabilityMetadata>>(null);
 
         public bool IsListed { get; }
     }

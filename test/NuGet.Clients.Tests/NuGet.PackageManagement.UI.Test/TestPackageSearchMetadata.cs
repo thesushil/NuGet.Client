@@ -59,7 +59,7 @@ namespace NuGet.PackageManagement.UI.Test
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<PackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync()
+        public Task<IEnumerable<IPackageVulnerabilityMetadata>> GetVulnerabilityMetadataAsync()
         {
             throw new NotImplementedException();
         }
