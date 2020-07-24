@@ -32,12 +32,12 @@ namespace NuGet.VisualStudio.Common
 
         public IOutputConsole OutputConsole { get; private set; }
 
-        public Lazy<ErrorListTableDataSource> ErrorListTableDataSource { get; private set; }
+        public Lazy<IErrorListTableDataSource> ErrorListTableDataSource { get; private set; }
 
         [ImportingConstructor]
         public OutputConsoleLogger(
             IOutputConsoleProvider consoleProvider,
-            Lazy<ErrorListTableDataSource> errorListDataSource)
+            Lazy<IErrorListTableDataSource> errorListDataSource)
             : this(
                   new VisualStudioShell(AsyncServiceProvider.GlobalProvider),
                   consoleProvider,
@@ -48,7 +48,7 @@ namespace NuGet.VisualStudio.Common
         internal OutputConsoleLogger(
             IVisualStudioShell visualStudioShell,
             IOutputConsoleProvider consoleProvider,
-            Lazy<ErrorListTableDataSource> errorListDataSource)
+            Lazy<IErrorListTableDataSource> errorListDataSource)
         {
             Verify.ArgumentIsNotNull(visualStudioShell, nameof(visualStudioShell));
             Verify.ArgumentIsNotNull(consoleProvider, nameof(consoleProvider));

@@ -63,7 +63,7 @@ namespace NuGet.SolutionRestoreManager
 
         private Common.ILogger Logger => _logger.Value;
 
-        private Lazy<ErrorListTableDataSource> _errorListTableDataSource;
+        private Lazy<IErrorListTableDataSource> _errorListTableDataSource;
         private readonly Lazy<IOutputConsoleProvider> _outputConsoleProvider;
 
         public Task<bool> CurrentRestoreOperation => _activeRestoreTask;
@@ -86,7 +86,7 @@ namespace NuGet.SolutionRestoreManager
             Lazy<INuGetLockService> lockService,
             [Import("VisualStudioActivityLogger")]
             Lazy<Common.ILogger> logger,
-            Lazy<ErrorListTableDataSource> errorListTableDataSource,
+            Lazy<IErrorListTableDataSource> errorListTableDataSource,
             Lazy<IOutputConsoleProvider> outputConsoleProvider)
             : this(AsyncServiceProvider.GlobalProvider,
                   solutionManager,
@@ -101,7 +101,7 @@ namespace NuGet.SolutionRestoreManager
             Lazy<IVsSolutionManager> solutionManager,
             Lazy<INuGetLockService> lockService,
             Lazy<Common.ILogger> logger,
-            Lazy<ErrorListTableDataSource> errorListTableDataSource,
+            Lazy<IErrorListTableDataSource> errorListTableDataSource,
             Lazy<IOutputConsoleProvider> outputConsoleProvider)
         {
             if (asyncServiceProvider == null)

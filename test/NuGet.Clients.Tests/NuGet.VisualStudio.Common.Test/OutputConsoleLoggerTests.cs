@@ -13,14 +13,14 @@ namespace NuGet.VisualStudio.Common.Test
         [Fact]
         public void When_null_visualStudioShell_is_passed_ArgumentNullException_is_thrown()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new OutputConsoleLogger(visualStudioShell: null, new Mock<IOutputConsoleProvider>().Object, new Lazy<ErrorListTableDataSource>()));
+            var exception = Assert.Throws<ArgumentNullException>(() => new OutputConsoleLogger(visualStudioShell: null, new Mock<IOutputConsoleProvider>().Object, new Lazy<IErrorListTableDataSource>()));
             exception.ParamName.Should().Be("visualStudioShell");
         }
 
         [Fact]
         public void When_null_consoleProvider_is_passed_ArgumentNullException_is_thrown()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new OutputConsoleLogger(new Mock<IVisualStudioShell>().Object, consoleProvider: null, new Lazy<ErrorListTableDataSource>()));
+            var exception = Assert.Throws<ArgumentNullException>(() => new OutputConsoleLogger(new Mock<IVisualStudioShell>().Object, consoleProvider: null, new Lazy<IErrorListTableDataSource>()));
             exception.ParamName.Should().Be("consoleProvider");
         }
 

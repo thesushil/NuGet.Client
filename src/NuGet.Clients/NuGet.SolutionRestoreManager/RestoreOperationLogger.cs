@@ -31,7 +31,7 @@ namespace NuGet.SolutionRestoreManager
         // Queue of (bool reportProgress, bool showAsOutputMessage, ILogMessage logMessage)
         private readonly ConcurrentQueue<Tuple<bool, bool, ILogMessage>> _loggedMessages = new ConcurrentQueue<Tuple<bool, bool, ILogMessage>>();
 
-        private Lazy<ErrorListTableDataSource> _errorListDataSource;
+        private Lazy<IErrorListTableDataSource> _errorListDataSource;
         private RestoreOperationSource _operationSource;
         private JoinableTaskFactory _taskFactory;
         private JoinableTaskCollection _jtc;
@@ -69,7 +69,7 @@ namespace NuGet.SolutionRestoreManager
 
         public async Task StartAsync(
             RestoreOperationSource operationSource,
-            Lazy<ErrorListTableDataSource> errorListDataSource,
+            Lazy<IErrorListTableDataSource> errorListDataSource,
             JoinableTaskFactory jtf,
             CancellationTokenSource cts)
         {
